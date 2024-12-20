@@ -24,7 +24,10 @@ export const TextAreaField = ({
   description,
   ...rest
 }: TextAreaFieldProps) => {
-  const { control } = useFormContext();
+  const {
+    control,
+    formState: { isSubmitting },
+  } = useFormContext();
 
   return (
     <FormField
@@ -34,7 +37,7 @@ export const TextAreaField = ({
         <FormItem>
           {label && <FormLabel>{label}</FormLabel>}
           <FormControl>
-            <Textarea {...rest} {...field} />
+            <Textarea {...rest} {...field} disabled={isSubmitting} />
           </FormControl>
           {description && <FormDescription>{description}</FormDescription>}
           <FormMessage />

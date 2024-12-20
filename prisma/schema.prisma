@@ -1,26 +1,26 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
- 
-generator client {
-  provider = "prisma-client-js"
-}
- 
+
 model User {
   id            String          @id @default(cuid())
   name          String?
   email         String          @unique
   emailVerified DateTime?
   image         String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
   accounts      Account[]
-  sessions      Session[]
   Authenticator Authenticator[]
-  blogs Blog[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  blogs         Blog?
+  sessions      Session[]
 }
- 
+
 model Account {
   userId            String
   type              String
@@ -33,31 +33,30 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
- 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
- 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@id([provider, providerAccountId])
 }
- 
+
 model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
- 
+
 model VerificationToken {
   identifier String
   token      String
   expires    DateTime
+
   @@id([identifier, token])
 }
- 
+
 model Authenticator {
   credentialID         String  @unique
   userId               String
@@ -67,36 +66,33 @@ model Authenticator {
   credentialDeviceType String
   credentialBackedUp   Boolean
   transports           String?
- 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+  user                 User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@id([userId, credentialID])
 }
 
 model Blog {
-  id            String          @id @default(cuid())
-  slug          String          @unique
-  name  String         
-  description  String         
-  cover         String?
-  userId      String  @unique
-  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  name        String
+  description String
+  cover       String?
+  userId      String    @unique
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   articles    Article[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Article {
-  id            String          @id @default(cuid())
-  slug          String          @unique
-  title           String
-  description   String
-  cover          String         
-  content        String
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  description String
+  cover       String
+  content     String
   blogSlug    String
-  blog        Blog     @relation(fields: [blogSlug], references: [slug], onDelete: Cascade, onUpdate: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  blog        Blog     @relation(fields: [blogSlug], references: [slug], onDelete: Cascade)
 }
-
-

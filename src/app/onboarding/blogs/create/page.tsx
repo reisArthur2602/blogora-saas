@@ -1,5 +1,11 @@
 import React from "react";
-import { FormCreateBlog } from "./form-create-blog";
+import { Metadata } from "next";
+
+import { FormCreateBlog } from "./_sessions/form-create-blog";
+
+export const metadata: Metadata = {
+  title: "Crie o seu blog - blogora.",
+};
 
 const CreateBlogPage = () => {
   return (

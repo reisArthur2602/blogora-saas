@@ -1,10 +1,13 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+
+import { createBlog } from "@/db/blog/actions";
 
 import {
   Card,
@@ -16,18 +19,20 @@ import {
 import { Form } from "@/components/ui/form";
 import { InputField } from "@/components/ui/input/field";
 import { TextAreaField } from "@/components/ui/textarea/field";
-import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { SubmitButton } from "@/components/ui/button/submit";
 
 const schema = z.object({
   name: z.string().min(1, { message: "Deve ter no mínimo 3 caracteres" }),
   description: z.string().min(1, { message: "Campo obrigatório" }),
-
-  slug: z.string().min(1).max(40),
+  slug: z.string().min(1, { message: "Campo obrigatório" }).max(40),
 });
 
 type FormData = z.infer<typeof schema>;
 
 export const FormCreateBlog = () => {
+  const { push } = useRouter();
+
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -37,9 +42,18 @@ export const FormCreateBlog = () => {
     },
   });
 
-  const onSubmit = (data: FormData) => {
-    console.log(data);
+  const onSubmit = async (data: FormData) => {
+    try {
+      const response = await createBlog(data);
+      if (response?.error) return toast.error(response.error);
+
+      toast.success("O blog criado com sucesso");
+      push("/onboarding/blogs");
+    } catch {
+      toast.success("Erro ao criar blog");
+    }
   };
+
   return (
     <Card>
       <CardHeader>
@@ -63,7 +77,7 @@ export const FormCreateBlog = () => {
               label="Descrição"
               placeholder="Descreva o brevemente o site"
             />
-            <Button>Criar Site</Button>
+            <SubmitButton>Criar blog</SubmitButton>
           </form>
         </Form>
       </CardContent>

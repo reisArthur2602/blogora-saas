@@ -23,7 +23,10 @@ export const InputField = ({
   description,
   ...rest
 }: InputFieldProps) => {
-  const { control } = useFormContext();
+  const {
+    control,
+    formState: { isSubmitting },
+  } = useFormContext();
 
   return (
     <FormField
@@ -33,7 +36,7 @@ export const InputField = ({
         <FormItem>
           {label && <FormLabel>{label}</FormLabel>}
           <FormControl>
-            <Input {...rest} {...field} />
+            <Input {...rest} {...field} disabled={isSubmitting} />
           </FormControl>
           {description && <FormDescription>{description}</FormDescription>}
           <FormMessage />
