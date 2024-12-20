@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 const schema = z.object({
   name: z.string().min(1, { message: "Deve ter no mínimo 3 caracteres" }),
   description: z.string().min(1, { message: "Campo obrigatório" }),
+
   slug: z.string().min(1).max(40),
 });
 

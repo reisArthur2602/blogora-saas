@@ -19,7 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { InputField } from "@/components/ui/input/field";
 import { Form } from "@/components/ui/form";
-import { signInUser } from "@/db/actions";
+import { signInUser } from "@/db/user/actions";
 
 const schema = z.object({
   email: z.string().min(2, "Campo obrigatório").email("Insira um email válido"),

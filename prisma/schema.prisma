@@ -16,7 +16,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   Authenticator Authenticator[]
- 
+  blogs Blog[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -47,7 +47,6 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -56,7 +55,6 @@ model VerificationToken {
   identifier String
   token      String
   expires    DateTime
- 
   @@id([identifier, token])
 }
  
@@ -74,3 +72,31 @@ model Authenticator {
  
   @@id([userId, credentialID])
 }
+
+model Blog {
+  id            String          @id @default(cuid())
+  slug          String          @unique
+  name  String         
+  description  String         
+  cover         String?
+  userId      String  @unique
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  articles    Article[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Article {
+  id            String          @id @default(cuid())
+  slug          String          @unique
+  title           String
+  description   String
+  cover          String         
+  content        String
+  blogSlug    String
+  blog        Blog     @relation(fields: [blogSlug], references: [slug], onDelete: Cascade, onUpdate: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
