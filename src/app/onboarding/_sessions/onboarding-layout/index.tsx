@@ -9,7 +9,7 @@ import { ProfileDropdown } from "./profile-dropdown";
 
 export const OnboardingLayout = ({ children }: PropsWithChildren) => {
   return (
-    <div className="grid h-screen grid-cols-[260px_1fr]">
+    <div className="grid h-screen grid-cols-[260px_1fr] overflow-hidden">
       {/* sidebar */}
       <aside className="flex flex-col border-r bg-muted/10">
         <header className="flex h-16 items-center justify-start border-b px-4">
@@ -23,7 +23,7 @@ export const OnboardingLayout = ({ children }: PropsWithChildren) => {
         </div>
       </aside>
 
-      <div>
+      <div className="flex flex-col">
         {/* header */}
         <header className="flex h-16 items-center border-b bg-muted/10 px-4">
           <div className="ml-auto flex w-fit items-center justify-center gap-4">
@@ -32,7 +32,7 @@ export const OnboardingLayout = ({ children }: PropsWithChildren) => {
           </div>
         </header>
         {/* content */}
-        <main className="px-4 py-6">{children}</main>
+        <main className="flex-1 px-4 py-6">{children}</main>
       </div>
     </div>
   );
