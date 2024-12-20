@@ -23,7 +23,6 @@ export const InputField = ({
   description,
   ...rest
 }: InputFieldProps) => {
-  
   const { control } = useFormContext();
 
   return (
