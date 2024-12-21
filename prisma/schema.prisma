@@ -17,7 +17,7 @@ model User {
   updatedAt     DateTime        @updatedAt
   accounts      Account[]
   Authenticator Authenticator[]
-  blogs         Blog?
+  blogs         Blog[]
   sessions      Session[]
 }
 
@@ -77,11 +77,11 @@ model Blog {
   name        String
   description String
   cover       String?
-  userId      String    @unique
+  articles    Article[]
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  articles    Article[]
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Article {
