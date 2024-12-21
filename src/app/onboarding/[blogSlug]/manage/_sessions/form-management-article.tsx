@@ -34,6 +34,7 @@ import { toast } from "sonner";
 import { EditorField } from "@/components/ui/editor/field";
 import { createArticle } from "@/db/article/actions";
 import { useRouter } from "next/navigation";
+import { Article } from "@prisma/client";
 
 const schema = z.object({
   title: z.string().min(1, { message: "Campo obrigatório" }),
@@ -58,25 +59,33 @@ type FormData = z.infer<typeof schema>;
 
 type FormManagementArticleProps = {
   blogSlug: string;
+  initialData: Article | null;
 };
 
 export const FormManagementArticle = ({
   blogSlug,
+  initialData,
 }: FormManagementArticleProps) => {
   const { push } = useRouter();
 
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      title: "",
-      slug: "",
-      description: "",
-      cover: "",
-      content: { type: "doc", content: [] },
+      title: initialData?.title ?? "",
+      slug: initialData?.slug ?? "",
+      description: initialData?.description ?? "",
+      cover: initialData?.cover ?? "",
+      content: initialData?.content
+        ? JSON.parse(initialData.content)
+        : { type: "doc", content: [] },
     },
   });
 
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const isEditing = !!initialData;
+
+  const [imagePreview, setImagePreview] = useState<string | null>(
+    initialData?.cover ?? null,
+  );
 
   const handleGenerateSlug = () => {
     const title = form.getValues("title");
@@ -105,10 +114,11 @@ export const FormManagementArticle = ({
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Criar Artigo</CardTitle>
+        <CardTitle>{isEditing ? "Editar Artigo" : "Criar Artigo"}</CardTitle>
         <CardDescription>
-          Após preencher o formulário, clique no botão abaixo para criar um
-          artigo
+          {isEditing
+            ? "Após preencher o formulário, clique no botão abaixo para criar um artigo"
+            : "Após preencher o formulário, clique no botão abaixo para editar o artigo"}
         </CardDescription>
       </CardHeader>
 
@@ -156,7 +166,7 @@ export const FormManagementArticle = ({
                       />
                     ) : (
                       <UploadDropzone
-                        className="border-muted"
+                        className="min-h-72 border-muted"
                         endpoint="imageUploader"
                         onClientUploadComplete={(res) => {
                           const imageUrl = res[0]?.url;
@@ -179,10 +189,12 @@ export const FormManagementArticle = ({
             <EditorField
               name="content"
               label="Conteúdo"
-              className="min-h-80 rounded-lg border p-4"
+              className="min-h-96 rounded-lg border px-6 py-8"
             />
 
-            <SubmitButton>Criar Artigo</SubmitButton>
+            <SubmitButton>
+              {isEditing ? "Editar Artigo" : "Criar Artigo"}
+            </SubmitButton>
           </form>
         </Form>
       </CardContent>

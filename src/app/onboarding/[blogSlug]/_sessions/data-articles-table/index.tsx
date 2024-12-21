@@ -72,7 +72,10 @@ export const DataArticlesTable = ({ articles }: DataArticlesTableProps) => {
               }).format(article.createdAt)}
             </TableCell>
             <TableCell>
-              <ArticleActionsButtons />
+              <ArticleActionsButtons
+                path={`/onboarding/${article.blogSlug}/manage?article_id=${article.id}`}
+                id={article.id}
+              />
             </TableCell>
           </TableRow>
         ))}
