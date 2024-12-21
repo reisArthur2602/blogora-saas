@@ -2,7 +2,11 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+
 import { useForm } from "react-hook-form";
+import { UploadDropzone } from "@/lib/uploadthing";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
   Card,
@@ -26,11 +30,39 @@ import { Button } from "@/components/ui/button";
 import { Bot } from "lucide-react";
 
 import { toast } from "sonner";
-import { UploadDropzone } from "@/lib/uploadthing";
+import { EditorField } from "@/components/ui/editor/field";
+
+const schema = z.object({
+  title: z.string().min(1, { message: "Campo obrigatório" }),
+  description: z.string().min(1, { message: "Campo obrigatório" }),
+  slug: z.string().min(1, { message: "Campo obrigatório" }).max(40),
+  cover: z.string().min(1, { message: "Campo obrigatório" }),
+  content: z
+    .object({})
+    .optional()
+    .refine((content) => !!content, { message: "Campo obrigatório" }),
+});
+
+type FormData = z.infer<typeof schema>;
 
 export const FormManagementArticle = () => {
-  const form = useForm();
+  const form = useForm<FormData>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      title: "",
+      slug: "",
+      description: "",
+      cover: "",
+      content: {},
+    },
+  });
+
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  const onSubmit = (data: FormData) => {
+    console.log(JSON.stringify(data.content));
+    toast.success("Artigo criado com sucesso!");
+  };
 
   return (
     <Card className="w-full">
@@ -44,28 +76,30 @@ export const FormManagementArticle = () => {
 
       <CardContent>
         <Form {...form}>
-          <form
-            className="space-y-6"
-            onSubmit={form.handleSubmit((data) => {
-              console.log("Form Data:", data);
-            })}
-          >
+          <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+            {/* Campo Título */}
             <InputField name="title" label="Título" />
+
+            {/* Campo Slug */}
             <InputField
               name="slug"
-              label="Sub-domínio"
-              placeholder="ex:. meu-blog"
+              label="Slug"
+              placeholder="ex:. meu-artigo"
               extraContent={
                 <Button variant={"secondary"} className="mt-2">
                   <Bot size={16} /> <>Gerar Slug</>
                 </Button>
               }
             />
+
+            {/* Campo Descrição */}
             <TextAreaField
               name="description"
               label="Descrição"
-              placeholder="Descreva brevemente o site"
+              placeholder="Descreva brevemente o artigo"
             />
+
+            {/* Campo Foto de Capa */}
             <FormField
               control={form.control}
               name="cover"
@@ -101,6 +135,12 @@ export const FormManagementArticle = () => {
                   </FormControl>
                 </FormItem>
               )}
+            />
+
+            <EditorField
+              name="content"
+              label="Conteúdo"
+              className="min-h-80 rounded-lg border p-4"
             />
 
             <SubmitButton>Criar Artigo</SubmitButton>

@@ -9,7 +9,7 @@ import { ProfileDropdown } from "./profile-dropdown";
 
 export const OnboardingLayout = ({ children }: PropsWithChildren) => {
   return (
-    <div className="grid h-screen grid-cols-[300px_1fr] overflow-hidden">
+    <div className="grid h-screen grid-cols-[300px_1fr]">
       {/* sidebar */}
       <aside className="flex flex-col border-r bg-muted/10">
         <header className="flex h-16 items-center justify-start border-b px-6">
