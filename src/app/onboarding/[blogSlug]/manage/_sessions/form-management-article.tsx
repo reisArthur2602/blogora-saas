@@ -32,7 +32,7 @@ import { Bot } from "lucide-react";
 
 import { toast } from "sonner";
 import { EditorField } from "@/components/ui/editor/field";
-import { createArticle } from "@/db/article/actions";
+import { createArticle, editArticle } from "@/db/article/actions";
 import { useRouter } from "next/navigation";
 import { Article } from "@prisma/client";
 
@@ -95,7 +95,24 @@ export const FormManagementArticle = ({
     toast.success("O slug foi criado com sucesso");
   };
 
-  const onSubmit = async (data: FormData) => {
+  const onEdit = async (data: FormData) => {
+    try {
+      const response = await editArticle({
+        ...data,
+        id: initialData?.id as string,
+        content: JSON.stringify(data.content),
+        blogSlug,
+      });
+
+      if (response?.error) return toast.error(response.error);
+      toast.success("O artigo foi editado com sucesso!");
+      push(`/onboarding/${blogSlug}`);
+    } catch {
+      toast.error("Erro ao editar artigo");
+    }
+  };
+
+  const onCreate = async (data: FormData) => {
     try {
       const response = await createArticle({
         ...data,
@@ -104,7 +121,7 @@ export const FormManagementArticle = ({
       });
 
       if (response?.error) return toast.error(response.error);
-      toast.success("Artigo criado com sucesso!");
+      toast.success("O artigo foi criado com sucesso!");
       push(`/onboarding/${blogSlug}`);
     } catch {
       toast.error("Erro ao criar artigo");
@@ -124,7 +141,10 @@ export const FormManagementArticle = ({
 
       <CardContent>
         <Form {...form}>
-          <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+          <form
+            className="space-y-6"
+            onSubmit={form.handleSubmit(isEditing ? onEdit : onCreate)}
+          >
             <InputField name="title" label="Título" />
 
             <InputField

@@ -6,3 +6,7 @@ export type CreateArticleProps = {
   cover: string;
   content: string;
 };
+
+export type EditArticleProps = CreateArticleProps & {
+  id: string;
+};

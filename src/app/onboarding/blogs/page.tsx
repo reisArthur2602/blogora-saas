@@ -9,7 +9,7 @@ import { getBlogs } from "@/db/blog/queries";
 const BlogsPage = async () => {
   const blogs = await getBlogs();
   return (
-    <div className="flex flex-col items-center gap-6">
+    <div className="flex flex-1 flex-col items-center gap-6">
       <Button asChild className="ml-auto">
         <Link href={"/onboarding/blogs/create"} className="space-x-2">
           <PlusCircle /> Criar Blog

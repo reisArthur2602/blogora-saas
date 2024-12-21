@@ -23,7 +23,7 @@ type OverviewCardProps = {
 
 export const OverviewCard = ({ data }: OverviewCardProps) => {
   return (
-    <Card className="grid h-[400px] w-full grid-rows-2 overflow-hidden">
+    <Card className="grid h-[360px] w-full auto-rows-fr grid-rows-[2fr_1fr] overflow-hidden">
       <div className="relative">
         <Image
           src={data.cover || "/gradient.jpg"}
@@ -35,7 +35,9 @@ export const OverviewCard = ({ data }: OverviewCardProps) => {
 
       <CardHeader>
         <CardTitle>{data.name}</CardTitle>
-        <CardDescription>{data.description}</CardDescription>
+        <CardDescription className="line-clamp-2">
+          {data.description}
+        </CardDescription>
       </CardHeader>
 
       <CardFooter>
