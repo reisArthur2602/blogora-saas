@@ -23,7 +23,7 @@ export const NavItens = () => {
           key={item.path}
           href={item.path}
           className={cn(
-            "flex w-full items-center gap-2 rounded-sm p-2 text-sm font-medium text-muted-foreground/40 transition-all hover:bg-accent/40",
+            "flex w-full items-center gap-2 rounded-sm p-2 text-sm font-medium text-muted-foreground/60 transition-all hover:bg-accent/40",
             isCurrentPath(item.path) && "text-foreground",
           )}
         >
