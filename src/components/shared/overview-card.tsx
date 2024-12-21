@@ -3,7 +3,13 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { Card, CardContent } from "../ui/card";
+import {
+  Card,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 import { Button } from "../ui/button";
 
 type OverviewCardProps = {
@@ -27,17 +33,16 @@ export const OverviewCard = ({ data }: OverviewCardProps) => {
         />
       </div>
 
-      <CardContent className="flex flex-col justify-between">
-        <div className="my-6">
-          <h2 className="line-clamp-1 text-xl font-bold">{data.name}</h2>
-          <p className="line-clamp-2 leading-5 text-muted-foreground/60">
-            {data.description}
-          </p>
-        </div>
+      <CardHeader>
+        <CardTitle>{data.name}</CardTitle>
+        <CardDescription>{data.description}</CardDescription>
+      </CardHeader>
+
+      <CardFooter>
         <Button asChild className="w-full" size={"lg"}>
           <Link href={data.path}>Ver Artigo</Link>
         </Button>
-      </CardContent>
+      </CardFooter>
     </Card>
   );
 };

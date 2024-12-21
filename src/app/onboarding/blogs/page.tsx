@@ -24,7 +24,7 @@ const BlogsPage = async () => {
               cover,
               description,
               name,
-              path: `/onboading/${slug}`,
+              path: `/onboarding/${slug}`,
             }}
           />
         ))}

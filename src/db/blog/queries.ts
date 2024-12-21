@@ -11,3 +11,8 @@ export const getBlogs = cache(async () => {
   const blogs = await db.blog.findMany({ where: { userId } });
   return blogs;
 });
+
+export const getBlog = cache(async (blogSlug: string) => {
+  const blog = await db.blog.findUnique({ where: { slug: blogSlug } });
+  return blog;
+});
