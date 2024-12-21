@@ -46,7 +46,7 @@ const BlogSlugPage = async ({ params }: BlogSlugPageProps) => {
       variant: "secondary",
     },
     {
-      path: `/onboarding/${blogSlug}/create`,
+      path: `/onboarding/${blogSlug}/manage`,
       name: "Criar Artigo",
       icon: PlusCircle,
       variant: "default",
@@ -54,7 +54,7 @@ const BlogSlugPage = async ({ params }: BlogSlugPageProps) => {
   ];
 
   return (
-    <div className="flex flex-col items-center gap-6">
+    <div className="flex flex-1 flex-col items-center gap-6">
       <div className="ml-auto flex items-center gap-4">
         {BLOG_SLUG_LINKS.map((link) => (
           <Button asChild key={link.name} variant={link.variant}>

@@ -32,7 +32,7 @@ export const OnboardingLayout = ({ children }: PropsWithChildren) => {
           </div>
         </header>
         {/* content */}
-        <main className="h-full p-6">{children}</main>
+        <main className="flex h-full p-6">{children}</main>
       </div>
     </div>
   );

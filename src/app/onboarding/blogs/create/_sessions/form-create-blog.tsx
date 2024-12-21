@@ -77,7 +77,7 @@ export const FormCreateBlog = () => {
               label="Descrição"
               placeholder="Descreva o brevemente o site"
             />
-            <SubmitButton>Criar blog</SubmitButton>
+            <SubmitButton>Criar Artigo</SubmitButton>
           </form>
         </Form>
       </CardContent>

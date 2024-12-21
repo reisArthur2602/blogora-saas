@@ -1,4 +1,4 @@
-import React, { ComponentProps } from "react";
+import React, { ComponentProps, JSX } from "react";
 import { useFormContext } from "react-hook-form";
 
 import {
@@ -15,12 +15,14 @@ type InputFieldProps = ComponentProps<"input"> & {
   name: string;
   label?: string;
   description?: string;
+  extraContent?: JSX.Element;
 };
 
 export const InputField = ({
   name,
   label,
   description,
+  extraContent,
   ...rest
 }: InputFieldProps) => {
   const {
@@ -39,6 +41,7 @@ export const InputField = ({
             <Input {...rest} {...field} disabled={isSubmitting} />
           </FormControl>
           {description && <FormDescription>{description}</FormDescription>}
+          {extraContent}
           <FormMessage />
         </FormItem>
       )}
