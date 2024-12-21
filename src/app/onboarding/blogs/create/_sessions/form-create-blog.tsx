@@ -50,7 +50,7 @@ export const FormCreateBlog = () => {
       toast.success("O blog criado com sucesso");
       push("/onboarding/blogs");
     } catch {
-      toast.success("Erro ao criar blog");
+      toast.error("Erro ao criar blog");
     }
   };
 

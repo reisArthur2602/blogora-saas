@@ -18,5 +18,6 @@ export const createBlog = async (data: CreateBlogProps) => {
       userId,
     },
   });
+
   revalidatePath("/onboarding");
 };
