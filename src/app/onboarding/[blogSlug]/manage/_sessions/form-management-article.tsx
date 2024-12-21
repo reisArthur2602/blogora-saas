@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { UploadDropzone } from "@/lib/uploadthing";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import slugify from "react-slugify";
 
 import {
   Card,
@@ -35,7 +36,11 @@ import { EditorField } from "@/components/ui/editor/field";
 const schema = z.object({
   title: z.string().min(1, { message: "Campo obrigatório" }),
   description: z.string().min(1, { message: "Campo obrigatório" }),
-  slug: z.string().min(1, { message: "Campo obrigatório" }).max(40),
+  slug: z
+    .string()
+    .min(1, { message: "Campo obrigatório" })
+    .max(40)
+    .transform((value) => slugify(value)),
   cover: z.string().min(1, { message: "Campo obrigatório" }),
   content: z
     .object({})
@@ -59,8 +64,16 @@ export const FormManagementArticle = () => {
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
+  const handleGenerateSlug = () => {
+    const title = form.getValues("title");
+    if (!title)
+      return toast.error("Você precisa de um título para gerar o slug");
+    form.setValue("slug", slugify(title));
+    toast.success("O slug foi criado com sucesso");
+  };
+
   const onSubmit = (data: FormData) => {
-    console.log(JSON.stringify(data.content));
+    console.log(data);
     toast.success("Artigo criado com sucesso!");
   };
 
@@ -77,29 +90,30 @@ export const FormManagementArticle = () => {
       <CardContent>
         <Form {...form}>
           <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
-            {/* Campo Título */}
             <InputField name="title" label="Título" />
 
-            {/* Campo Slug */}
             <InputField
               name="slug"
               label="Slug"
               placeholder="ex:. meu-artigo"
               extraContent={
-                <Button variant={"secondary"} className="mt-2">
+                <Button
+                  variant={"secondary"}
+                  className="mt-2"
+                  type="button"
+                  onClick={handleGenerateSlug}
+                >
                   <Bot size={16} /> <>Gerar Slug</>
                 </Button>
               }
             />
 
-            {/* Campo Descrição */}
             <TextAreaField
               name="description"
               label="Descrição"
               placeholder="Descreva brevemente o artigo"
             />
 
-            {/* Campo Foto de Capa */}
             <FormField
               control={form.control}
               name="cover"
