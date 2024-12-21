@@ -32,6 +32,8 @@ import { Bot } from "lucide-react";
 
 import { toast } from "sonner";
 import { EditorField } from "@/components/ui/editor/field";
+import { createArticle } from "@/db/article/actions";
+import { useRouter } from "next/navigation";
 
 const schema = z.object({
   title: z.string().min(1, { message: "Campo obrigatório" }),
@@ -43,14 +45,26 @@ const schema = z.object({
     .transform((value) => slugify(value)),
   cover: z.string().min(1, { message: "Campo obrigatório" }),
   content: z
-    .object({})
-    .optional()
-    .refine((content) => !!content, { message: "Campo obrigatório" }),
+    .object({
+      type: z.string(),
+      content: z.array(z.any()).min(1, { message: "Campo obrigatório" }),
+    })
+    .refine((content) => content.content.length > 0, {
+      message: "Campo obrigatório",
+    }),
 });
 
 type FormData = z.infer<typeof schema>;
 
-export const FormManagementArticle = () => {
+type FormManagementArticleProps = {
+  blogSlug: string;
+};
+
+export const FormManagementArticle = ({
+  blogSlug,
+}: FormManagementArticleProps) => {
+  const { push } = useRouter();
+
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -58,7 +72,7 @@ export const FormManagementArticle = () => {
       slug: "",
       description: "",
       cover: "",
-      content: {},
+      content: { type: "doc", content: [] },
     },
   });
 
@@ -72,9 +86,20 @@ export const FormManagementArticle = () => {
     toast.success("O slug foi criado com sucesso");
   };
 
-  const onSubmit = (data: FormData) => {
-    console.log(data);
-    toast.success("Artigo criado com sucesso!");
+  const onSubmit = async (data: FormData) => {
+    try {
+      const response = await createArticle({
+        ...data,
+        content: JSON.stringify(data.content),
+        blogSlug,
+      });
+
+      if (response?.error) return toast.error(response.error);
+      toast.success("Artigo criado com sucesso!");
+      push(`/onboarding/${blogSlug}`);
+    } catch {
+      toast.error("Erro ao criar artigo");
+    }
   };
 
   return (

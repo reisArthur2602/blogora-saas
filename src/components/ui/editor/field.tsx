@@ -30,7 +30,7 @@ export const EditorField = ({ label, name, className }: EditorFieldProps) => {
           <FormLabel>{label}</FormLabel>
           <FormControl>
             <Editor
-              value={field.value}
+              value={field.value || { type: "doc", content: [] }}
               onChange={(value: JSONContent) => field.onChange(value)}
               className={className}
             />

@@ -37,7 +37,7 @@ export const Editor = ({ onChange, value, className }: EditorProps) => {
           },
         }}
         extensions={extensions}
-        initialContent={value}
+        initialContent={value || { type: "doc", content: [] }}
         onUpdate={({ editor }) => {
           const json = editor.getJSON();
           onChange(json);

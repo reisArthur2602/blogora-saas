@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
+import { getArticles } from "@/db/article/queries";
 import { getBlog } from "@/db/blog/queries";
 import { Book, LucideProps, PlusCircle, Settings2 } from "lucide-react";
+
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ForwardRefExoticComponent, RefAttributes } from "react";
@@ -52,6 +54,8 @@ const BlogSlugPage = async ({ params }: BlogSlugPageProps) => {
       variant: "default",
     },
   ];
+
+  const articles = await getArticles(blogSlug);
 
   return (
     <div className="flex flex-1 flex-col items-center gap-6">
